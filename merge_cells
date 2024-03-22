@@ -1,0 +1,49 @@
+Sub MergeCells()
+    Dim lastRow As Long
+    Dim lastCol As Long
+    Dim i As Long, j As Long
+    Dim startRow As Long, endRow As Long
+    Dim currentValue As String
+    
+    ' Turn off display alerts to suppress warning messages
+    Application.DisplayAlerts = False
+    
+    ' Find the last row and last column with data in the active sheet
+    lastRow = Cells.Find(What:="*", After:=Range("A1"), SearchOrder:=xlByRows, SearchDirection:=xlPrevious).Row
+    lastCol = Cells.Find(What:="*", After:=Range("A1"), SearchOrder:=xlByColumns, SearchDirection:=xlPrevious).Column
+    
+    ' Loop through each column
+    For j = 1 To lastCol
+        ' Initialize startRow and currentValue
+        startRow = 1
+        currentValue = Cells(startRow, j).Value
+        
+        ' Loop through each row in the column
+        For i = 2 To lastRow
+            If Cells(i, j).Value <> currentValue Then
+                ' If the current cell value is different from the previous one, merge cells if there are more than one consecutive cell with the same value
+                If i - startRow > 1 Then
+                    endRow = i - 1
+                    ' Merge cells
+                    With Range(Cells(startRow, j), Cells(endRow, j))
+                        .merge
+                    End With
+                End If
+                ' Update startRow and currentValue for the next group of identical cells
+                startRow = i
+                currentValue = Cells(startRow, j).Value
+            End If
+        Next i
+        
+        ' Merge the remaining cells if they are identical until the last row
+        If lastRow - startRow > 0 Then
+            ' Merge cells
+            With Range(Cells(startRow, j), Cells(lastRow, j))
+                .merge
+            End With
+        End If
+    Next j
+    
+    ' Turn on display alerts
+    Application.DisplayAlerts = True
+End Sub
