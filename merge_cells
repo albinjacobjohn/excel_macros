@@ -24,9 +24,11 @@ Sub MergeCells()
                 ' If the current cell value is different from the previous one, merge cells if there are more than one consecutive cell with the same value
                 If i - startRow > 1 Then
                     endRow = i - 1
-                    ' Merge cells
+                    ' Merge cells and center-align
                     With Range(Cells(startRow, j), Cells(endRow, j))
-                        .merge
+                        .Merge
+                        .HorizontalAlignment = xlCenter
+                        .VerticalAlignment = xlCenter
                     End With
                 End If
                 ' Update startRow and currentValue for the next group of identical cells
@@ -37,9 +39,11 @@ Sub MergeCells()
         
         ' Merge the remaining cells if they are identical until the last row
         If lastRow - startRow > 0 Then
-            ' Merge cells
+            ' Merge cells and center-align
             With Range(Cells(startRow, j), Cells(lastRow, j))
-                .merge
+                .Merge
+                .HorizontalAlignment = xlCenter
+                .VerticalAlignment = xlCenter
             End With
         End If
     Next j
